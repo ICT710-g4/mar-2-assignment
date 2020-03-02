@@ -1,17 +1,20 @@
 from flask import Flask, request, jsonify
-import sqlite3
+import os
+import psycopg2
+import dj_database_url
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 @app.route('/input', methods=["POST"])
-def register():
+def input():
     payload = request.get_json(force=True)
     temp = payload['temp']
     humid = payload['humid']
-    conn = sqlite3.connect('dataset.db')
+    DATABASE_URL = os.environ['DATABASE_URL']
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     c = conn.cursor()
-    c.execute('INSERT INTO records(temp,humid) VALUES(?,?)', (temp,humid,))
+    c.execute('INSERT INTO records(temp,humid) VALUES('+str(temp)+','+str(humid)+')')
     conn.commit()
     conn.close()
     resp = {'status':'OK'}
@@ -20,7 +23,8 @@ def register():
 @app.route('/summary')
 def summary():
     name = request.args.get('time')
-    conn = sqlite3.connect('dataset.db')
+    DATABASE_URL = os.environ['DATABASE_URL']
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     c = conn.cursor()
     c.execute('SELECT * FROM records')
     records = c.fetchall()
@@ -31,9 +35,10 @@ def summary():
     conn.close()
     resp = {'status':'OK', 'results':results}
     return jsonify(resp)
-
+	
 if __name__ == '__main__':
-    conn = sqlite3.connect('dataset.db')
+    DATABASE_URL = os.environ['DATABASE_URL']
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS records
              (_id INTEGER PRIMARY KEY AUTOINCREMENT,
