@@ -11,10 +11,25 @@ def input():
     payload = request.get_json(force=True)
     temp = payload['temp']
     humid = payload['humid']
+    print(temp,humid)
     DATABASE_URL = os.environ['DATABASE_URL']
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     c = conn.cursor()
-    c.execute('INSERT INTO records(temp,humid) VALUES('+str(temp)+','+str(humid)+')')
+    c.execute('INSERT INTO records(temp,humid) VALUES(%s, %s);' % (temp,humid))
+    conn.commit()
+    conn.close()
+    resp = {'status':'OK'}
+    return jsonify(resp)
+
+@app.route('/input', methods=["GET"])
+def getinput():
+    temp = request.args.get('temp')
+    humid = request.args.get('humid')
+    print(temp,humid)
+    DATABASE_URL = os.environ['DATABASE_URL']
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    c = conn.cursor()
+    c.execute('INSERT INTO records(temp,humid) VALUES(%s, %s);' % (temp,humid))
     conn.commit()
     conn.close()
     resp = {'status':'OK'}
