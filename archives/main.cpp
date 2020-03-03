@@ -143,7 +143,7 @@ void pressed_handler() {
 			humid_value = BSP_HSENSOR_ReadHumidity();
 			printf("HUMIDITY    = %.2f %%\n", humid_value);
 			
-			/*  {
+			{
 				char link[128];
 				sprintf(link,"https://iot-humidity-and-temperature.herokuapp.com/input?temp=%.2f&humid=%.2f", temp_value, humid_value);
 				printf(link);
@@ -154,8 +154,8 @@ void pressed_handler() {
 				//}
 				//dump_response(get_res);
 				delete get_req;
-			} 
-			 */
+			}
+			
 			{
 				HttpsRequest* post_req = new HttpsRequest(wifi, SSL_CA_PEM, HTTP_POST, "https://iot-humidity-and-temperature.herokuapp.com/input");
 				post_req->set_header("Content-Type", "application/json");
@@ -163,14 +163,14 @@ void pressed_handler() {
 				sprintf(body,"{\"humid\":%.2f,\"temp\":%.2f}", humid_value, temp_value);
 				HttpResponse* post_res = post_req->send(body, strlen(body));
 				//if (!post_res) {
-					 printf("\n POST, HttpRequest code %d\n", post_res->get_status_code());
+					 printf("\n POST, HttpRequest failed (error code %d)\n", post_res->get_status_code());
 				//}
 				//dump_response(get_res1);
 				 delete post_req;
 			}
 		
 		}    
-	ThisThread::sleep_for(60000);}
+	ThisThread::sleep_for(10000);}
 }
 
 int main(){
