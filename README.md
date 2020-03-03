@@ -9,7 +9,7 @@ These programs are a part of Software Design for Embedded System laboratory. Thi
 	- param: float temp, float humid
 	- put data into database
 	
-- `https://iot-humidity-and-temperature.herokuapp.com/summary`, get method
+- `https://iot-humidity-and-temperature.herokuapp.com/summary`, GET method
 	- show all data in database
 
 ## Members
@@ -22,7 +22,7 @@ These programs are a part of Software Design for Embedded System laboratory. Thi
 
 All of us are students in TAIST-ICTES program, sem. 2/2019
 
-## Objective
+## Objectives
 
 1.  modify the flask-ws-register to work with Postgres database
 
